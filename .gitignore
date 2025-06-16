@@ -115,6 +115,7 @@ fabric.properties
 .idea/**/azureSettings.xml
 
 application.properties
+application-secret.properties
 
 echo "target/"
 # End of https://www.toptal.com/developers/gitignore/api/intellij
