@@ -20,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -44,13 +45,22 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
-            User newUser = userService.register(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+            userService.register(user);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of(
+                            "registerSuccess", true,
+                            "message", "축하합니다. 회원가입이 완료되었습니다."
+                    ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("success", false, "message", e.getMessage()));
+                    .body(Map.of(
+                            "registerSuccess", false,
+                            "message", e.getMessage()  // "이미 존재하는 이메일입니다."
+                    ));
         }
     }
+
+
 
     @PutMapping("/modify")
     public ResponseEntity<?> modify(@RequestBody User user) {

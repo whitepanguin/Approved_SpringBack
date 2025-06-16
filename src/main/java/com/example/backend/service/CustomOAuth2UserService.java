@@ -67,6 +67,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
 
+
         // JWT 생성: 전체 정보 포함
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", user.getEmail());
@@ -77,10 +78,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String token = jwtUtil.generateTokenWithClaims(claims);
 
-        attributes.put("jwtToken", token);
+        Map<String, Object> originalAttributes = oAuth2User.getAttributes();
+        Map<String, Object> mutableAttributes = new HashMap<>(originalAttributes);
+        mutableAttributes.put("jwtToken", token);
+
         return new DefaultOAuth2User(
                 oAuth2User.getAuthorities(),
-                attributes,
+                mutableAttributes,
                 "email"
         );
     }
