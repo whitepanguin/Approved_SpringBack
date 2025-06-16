@@ -1,6 +1,7 @@
 package com.example.backend.config;
 
 import com.example.backend.security.JwtAuthenticationFilter;
+import com.example.backend.security.JwtUtil;
 import com.example.backend.security.OAuth2LoginSuccessHandler;
 import com.example.backend.service.CustomOAuth2UserService;
 import com.example.backend.repository.UserRepository;
@@ -20,10 +21,11 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(userRepository); // 필터에 UserRepository 넘기기
+        return new JwtAuthenticationFilter(userRepository, jwtUtil);
     }
 
     @Bean

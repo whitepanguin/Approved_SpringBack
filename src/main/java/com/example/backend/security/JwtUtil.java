@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 
 @Component
 public class JwtUtil {
@@ -20,32 +22,9 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        // 길이 검사 없이 안전한 키 자동 생성
         signingKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
-    // ✅ JWT 생성 (기본)
-    public String generateToken(Object userInfo) {
-        return Jwts.builder()
-                .setSubject("user-auth")
-                .claim("user", userInfo)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(signingKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    // ✅ JWT 생성 (커스텀 claims)
-    public String generateTokenWithClaims(Map<String, Object> claims) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(signingKey, SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    // ✅ 토큰 검증
     public Jws<Claims> validateToken(String token) {
         try {
             return Jwts.parserBuilder()
@@ -57,7 +36,25 @@ public class JwtUtil {
         }
     }
 
-    // ✅ user 정보 추출
+    public String generateToken(Object userInfo) {
+        return Jwts.builder()
+                .setSubject("user-auth")
+                .claim("user", userInfo)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(signingKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateTokenWithClaims(Map<String, Object> claims) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(signingKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public Object extractUser(String token) {
         return validateToken(token).getBody().get("user");
     }
