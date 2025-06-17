@@ -34,6 +34,9 @@ public class UserService {
         user.setCreatedAt(now);
         user.setUpdatedAt(now);
 
+        if (user.getPhone() == null) user.setPhone("");
+        if (user.getBusinessType() == null) user.setBusinessType("");
+
         return userRepository.save(user);
     }
 
@@ -51,6 +54,10 @@ public class UserService {
         user.setUserid(userData.getUserid());
         user.setAddress(userData.getAddress());
         user.setBirthDate(userData.getBirthDate());
+        user.setPhone(userData.getPhone());
+        user.setBusinessType(userData.getBusinessType());
+        user.setUpdatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
 
         userRepository.save(user); // 업데이트
     }

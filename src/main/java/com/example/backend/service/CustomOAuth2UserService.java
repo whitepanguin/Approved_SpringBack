@@ -63,6 +63,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if (entity == null) {
             entity = new User(email, name, profile, registrationId, user.getUserid());
+            entity.setPhone("");
+            entity.setBusinessType("");
+            entity.setAddress("");
+            entity.setBirthDate(0L);
             userRepository.save(entity);
         }
 
@@ -75,6 +79,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         claims.put("profile", user.getProfile());
         claims.put("provider", user.getProvider());
         claims.put("userid", user.getUserid());
+        claims.put("phone", entity.getPhone());
+        claims.put("businessType", entity.getBusinessType());
+        claims.put("address", entity.getAddress());
+        claims.put("birthDate", entity.getBirthDate());
 
         String token = jwtUtil.generateTokenWithClaims(claims);
 
