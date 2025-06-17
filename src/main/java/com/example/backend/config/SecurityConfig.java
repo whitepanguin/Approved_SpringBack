@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/users/register", "/users/**").permitAll()
+                        .requestMatchers("/auth/**", "/users/register", "/users/**", "/posts", "/posts/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class) // 👈 필터 등록
@@ -42,12 +42,12 @@ public class SecurityConfig {
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"success\":false, \"message\":\"인증이 필요합니다.\"}");
+                            response.getWriter().write("{\"success\":false, \"message\":\"exceptionHandling.\"}");
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                             response.setContentType("application/json");
-                            response.getWriter().write("{\"success\":false, \"message\":\"접근 권한이 없습니다.\"}");
+                            response.getWriter().write("{\"success\":false, \"message\":\"accessDeniedHandler.\"}");
                         })
                 )
                 .oauth2Login(oauth -> oauth

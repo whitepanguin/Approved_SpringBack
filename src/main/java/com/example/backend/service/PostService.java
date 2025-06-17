@@ -3,6 +3,7 @@ package com.example.backend.service;
 import com.example.backend.model.Post;
 import com.example.backend.model.User;
 import com.example.backend.repository.PostRepository;
+import com.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,11 @@ import java.util.Optional;
 @Service
 public class PostService {
 
-    private final PostRepository postRepository;
 
+
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private MongoTemplate mongoTemplate;

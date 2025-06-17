@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Map.of(
                         "success", false,
-                        "message", e.getMessage()
+                        "message", "handleIllegalArgument오류"+e.getMessage()
                 ));
     }
 
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of(
                         "success", false,
-                        "message", e.getMessage()
+                        "message", "handleRuntime오류"+e.getMessage()
                 ));
     }
 }

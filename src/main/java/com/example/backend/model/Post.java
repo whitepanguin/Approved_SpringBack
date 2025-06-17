@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Document(collection = "posts")
@@ -25,12 +26,12 @@ public class Post {
     private boolean isHot = false;
     private boolean isNotice = false;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private String createdAt ;
+    private String updatedAt ;
 
     public Post() {}
 
-    public Post(LocalDateTime updatedAt, LocalDateTime createdAt, boolean isNotice, boolean isHot, String preview, int likes, int comments, int views, List<String> tags, String category, String content, String title, String userid, String id) {
+    public Post(String updatedAt, String createdAt, boolean isNotice, boolean isHot, String preview, int likes, int comments, int views, List<String> tags, String category, String content, String title, String userid, String id) {
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
         this.isNotice = isNotice;
@@ -143,19 +144,19 @@ public class Post {
         isNotice = notice;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 }
