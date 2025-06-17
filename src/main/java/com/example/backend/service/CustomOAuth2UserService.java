@@ -66,7 +66,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             entity.setPhone("");
             entity.setBusinessType("");
             entity.setAddress("");
-            entity.setBirthDate(0L);
+            entity.setBirthDate("");
             userRepository.save(entity);
         }
 

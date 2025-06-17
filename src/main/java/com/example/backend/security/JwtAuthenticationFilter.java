@@ -62,7 +62,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         user.getName(),
                         user.getUserid(),
                         user.getProvider(),
-                        user.getProfile()
+                        user.getProfile(),
+                        user.getPhone(),
+                        user.getBusinessType(),
+                        user.getAddress(),
+                        user.getBirthDate()
+
                 );
 
                 UsernamePasswordAuthenticationToken authentication =

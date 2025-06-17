@@ -38,6 +38,11 @@ public class AuthController {
         userData.put("userid", userDetails.getUserid());
         userData.put("profile", userDetails.getProfile());
         userData.put("provider", userDetails.getProvider());
+        userData.put("phone", userDetails.getPhone());
+        userData.put("businessType", userDetails.getBusinessType());
+        userData.put("address", userDetails.getAddress());
+        userData.put("birthDate", userDetails.getBirthDate());
+
 
         return ResponseEntity.ok(Map.of(
                 "message", "자동 로그인 성공",

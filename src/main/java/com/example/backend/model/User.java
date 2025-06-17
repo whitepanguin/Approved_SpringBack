@@ -18,7 +18,7 @@ public class User {
     private String password;
     private String name;
     private String userid;
-    private Long birthDate;
+    private String birthDate;
     private String phone;
     private String businessType;
     private String address;
@@ -55,8 +55,8 @@ public class User {
     public String getUserid() { return userid; }
     public void setUserid(String userid) { this.userid = userid; }
 
-    public Long getBirthDate() { return birthDate; }
-    public void setBirthDate(Long birthDate) { this.birthDate = birthDate; }
+    public String getBirthDate() { return birthDate; }
+    public void setBirthDate(String birthDate) { this.birthDate = birthDate; }
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }

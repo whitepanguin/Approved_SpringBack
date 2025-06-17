@@ -15,6 +15,11 @@ public class CustomUserDetails implements UserDetails {
     private String userid;
     private String provider;
     private String profile;
+    private String phone;
+    private String businessType;
+    private String address;
+    private String birthDate;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
