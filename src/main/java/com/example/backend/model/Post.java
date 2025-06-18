@@ -2,6 +2,7 @@ package com.example.backend.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -17,6 +18,8 @@ public class Post {
     private String content;
     private String category;
     private List<String> tags;
+    private String email; // 작성자 이메일
+
 
     private int views = 0;
     private int comments = 0;
@@ -26,12 +29,18 @@ public class Post {
     private boolean isHot = false;
     private boolean isNotice = false;
 
-    private String createdAt ;
-    private String updatedAt ;
+    @Field("createdAt")
+    private String createdAt;
+    @Field("updatedAt")
+    private String updatedAt;
+
+    private int reports = 0; // 신고 횟수
+    private boolean isReported = false; // 신고 처리 여부
+
 
     public Post() {}
 
-    public Post(String updatedAt, String createdAt, boolean isNotice, boolean isHot, String preview, int likes, int comments, int views, List<String> tags, String category, String content, String title, String userid, String id) {
+    public Post(String updatedAt, String createdAt, boolean isNotice, boolean isHot, String preview, int likes, int comments, int views, List<String> tags, String category, String content, String title, String userid, String email, String id) {
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
         this.isNotice = isNotice;
@@ -45,8 +54,19 @@ public class Post {
         this.content = content;
         this.title = title;
         this.userid = userid;
+        this.email = email;
         this.id = id;
     }
+
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 
     public String getId() {
         return id;
@@ -156,7 +176,33 @@ public class Post {
         return updatedAt;
     }
 
+    public int getReports() {
+        return reports;
+    }
+
+    public void setReports(int reports) {
+        this.reports = reports;
+    }
+
+    public boolean isReported() {
+        return isReported;
+    }
+
+    public void setReported(boolean reported) {
+        isReported = reported;
+    }
+
+
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public void addReport() {
+        this.reports += 1;
+        // views가 0일 경우 divide by zero 방지
+        if (views > 0 && reports > (views / 3)) {
+            this.isReported = true;
+        }
+    }
+
 }

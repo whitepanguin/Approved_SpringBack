@@ -9,6 +9,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
 
@@ -50,6 +53,14 @@ public class PostService {
     }
 
     public Post createPost(Post post) {
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        // 날짜가 없으면 백엔드에서 직접 설정
+        if (post.getCreatedAt() == null || post.getCreatedAt().isEmpty()) {
+            post.setCreatedAt(now);
+        }
+        post.setUpdatedAt(now);
+
         return postRepository.save(post);
     }
 
@@ -104,6 +115,23 @@ public class PostService {
             if ("comments".equals(sort)) return postRepository.findAllByOrderByCommentsDesc();
             return postRepository.findAllByOrderByCreatedAtDesc();
         }
+    }
+    public long getPostCount() {
+        return postRepository.count();
+    }
+
+    public Post reportPost(String postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("게시글 없음"));
+        post.addReport();
+        return postRepository.save(post);
+    }
+
+    public List<Post> getReportedPosts() {
+        return postRepository.findByIsReportedTrue();
+    }
+
+    public long getReportedPostCount() {
+        return postRepository.countByIsReportedTrue();
     }
 
 }

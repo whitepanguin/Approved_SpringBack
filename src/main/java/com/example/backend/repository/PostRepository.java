@@ -17,4 +17,8 @@ public interface PostRepository extends MongoRepository<Post, String> {
     List<Post> findAllByOrderByCommentsDesc();
     List<Post> findAllByOrderByCreatedAtDesc();
 
+    // 신고된 게시글 리스트
+    List<Post> findByIsReportedTrue();
+    // 신고된 게시글 개수
+    long countByIsReportedTrue();
 }

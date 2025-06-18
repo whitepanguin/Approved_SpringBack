@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.core.*;
 import org.springframework.stereotype.Service;
 import com.example.backend.model.User;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +69,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             entity.setBusinessType("");
             entity.setAddress("");
             entity.setBirthDate("");
+            String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            entity.setCreatedAt(now);
+            entity.setUpdatedAt(now);
             userRepository.save(entity);
         }
 
@@ -83,6 +88,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         claims.put("businessType", entity.getBusinessType());
         claims.put("address", entity.getAddress());
         claims.put("birthDate", entity.getBirthDate());
+
 
         String token = jwtUtil.generateTokenWithClaims(claims);
 

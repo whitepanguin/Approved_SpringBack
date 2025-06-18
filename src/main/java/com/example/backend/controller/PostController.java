@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.model.Post;
 import com.example.backend.service.PostService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,5 +70,68 @@ public class PostController {
         return postService.getCategoryCounts();
     }
 
+    @GetMapping("/PostCount")
+    public ResponseEntity<?> getPostCount() {
+        try {
+            long count = postService.getPostCount();
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "유저 수 조회 성공",
+                    "count", count
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "글 수 조회 실패"));
+        }
+    }
+
+    @PatchMapping("/{id}/report")
+    public ResponseEntity<?> reportPost(@PathVariable String id) {
+        try {
+            Post updated = postService.reportPost(id);
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", updated.isReported() ? "해당 글은 다수의 신고로 제한되었습니다." : "신고가 접수되었습니다.",
+                    "isReported", updated.isReported(),
+                    "reports", updated.getReports()
+            ));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+    /*
+async function handleReport(postId) {
+  const res = await fetch(`http://localhost:8000/posts/${postId}/report`, {
+    method: "PATCH",
+  });
+  const data = await res.json();
+  alert(data.message);
+}
+*/
+    // 신고된 게시글 리스트 반환
+    @GetMapping("/reported")
+    public ResponseEntity<List<Post>> getReportedPosts() {
+        return ResponseEntity.ok(postService.getReportedPosts());
+    }
+
+    // 신고된 게시글 개수 반환
+    @GetMapping("/reported/count")
+    public ResponseEntity<?> getReportedPostCount() {
+        try {
+            long count = postService.getReportedPostCount();
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", "신고된 글 수 조회 성공",
+                    "count", count
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                            "success", false,
+                            "message", "신고된 글 수 조회 실패"
+                    ));
+        }
+    }
 
 }
