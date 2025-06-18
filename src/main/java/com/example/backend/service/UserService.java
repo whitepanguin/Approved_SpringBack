@@ -105,6 +105,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public boolean isUseridDuplicated(String userid) {
+        return userRepository.existsByUserid(userid);
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
