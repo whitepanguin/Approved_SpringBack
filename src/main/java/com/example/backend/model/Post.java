@@ -40,22 +40,24 @@ public class Post {
 
     public Post() {}
 
-    public Post(String updatedAt, String createdAt, boolean isNotice, boolean isHot, String preview, int likes, int comments, int views, List<String> tags, String category, String content, String title, String userid, String email, String id) {
-        this.updatedAt = updatedAt;
-        this.createdAt = createdAt;
-        this.isNotice = isNotice;
-        this.isHot = isHot;
-        this.preview = preview;
-        this.likes = likes;
-        this.comments = comments;
-        this.views = views;
-        this.tags = tags;
-        this.category = category;
-        this.content = content;
-        this.title = title;
-        this.userid = userid;
-        this.email = email;
+    public Post(String id, String userid, String title, String content, String category, List<String> tags, String email, int views, int comments, int likes, String preview, boolean isHot, boolean isNotice, String createdAt, String updatedAt, int reports, boolean isReported) {
         this.id = id;
+        this.userid = userid;
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.tags = tags;
+        this.email = email;
+        this.views = views;
+        this.comments = comments;
+        this.likes = likes;
+        this.preview = preview;
+        this.isHot = isHot;
+        this.isNotice = isNotice;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.reports = reports;
+        this.isReported = isReported;
     }
 
 
