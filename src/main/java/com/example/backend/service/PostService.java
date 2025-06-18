@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.model.Post;
 import com.example.backend.model.User;
+import com.example.backend.repository.LikeRepository;
 import com.example.backend.repository.PostRepository;
 import com.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,8 @@ import java.util.Optional;
 public class PostService {
 
 
-
+    @Autowired
+    private LikeRepository likeRepo;
 
     @Autowired
     private PostRepository postRepository;
@@ -133,5 +135,7 @@ public class PostService {
     public long getReportedPostCount() {
         return postRepository.countByIsReportedTrue();
     }
-
+    public int getLikeCountByPostId(String postId) {
+        return likeRepo.countByPostId_Id(postId);
+    }
 }

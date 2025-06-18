@@ -134,4 +134,13 @@ async function handleReport(postId) {
         }
     }
 
+    @GetMapping("/{id}/like-count")
+    public ResponseEntity<?> getLikeCount(@PathVariable String id) {
+        int count = postService.getLikeCountByPostId(id);
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "likeCount", count
+        ));
+    }
+
 }
