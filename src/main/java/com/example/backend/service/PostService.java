@@ -72,6 +72,9 @@ public class PostService {
             post.setContent(newPost.getContent());
             post.setCategory(newPost.getCategory());
             post.setTags(newPost.getTags());
+            post.setViews(newPost.getViews());
+            post.setLikes(newPost.getLikes());
+            post.setReports(newPost.getReports());
             post.setPreview(newPost.getPreview());
             post.setUpdatedAt(newPost.getUpdatedAt());
             return postRepository.save(post);
