@@ -1,6 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.model.Like;
+import com.example.backend.model.Post;
 import com.example.backend.service.LikeService;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,5 +24,10 @@ public class LikeController {
     @GetMapping("/user/{userid}")
     public List<Like> getLikesByUser(@PathVariable String userid) {
         return likeService.getLikesByUser(userid);
+    }
+
+    @GetMapping("/user/{userid}/posts")
+    public List<Post> getLikedPostsByUser(@PathVariable String userid) {
+        return likeService.getLikedPostsByUser(userid);
     }
 }
