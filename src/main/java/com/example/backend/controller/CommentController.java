@@ -48,4 +48,10 @@ public class CommentController {
     public List<CommentResponseDto> getCommentsByUser(@PathVariable String userid) {   // 🔹 반환 타입 변경
         return commentService.getCommentsByUser(userid);
     }
+
+    @GetMapping("/email/{email}")
+    public List<CommentResponseDto> getCommentsByEmail(@PathVariable String email) {
+        return commentService.getCommentsByEmail(email);
+    }
+
 }

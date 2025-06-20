@@ -11,7 +11,7 @@ public class Comment {
 
     @Id
     private String id;
-
+    private String email;
     private String userid;
     private String content;
 
@@ -26,6 +26,7 @@ public class Comment {
     public Comment(String id, String userid, String content, Post postId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userid = userid;
+        this.email = email;
         this.content = content;
         this.postId = postId;
         this.createdAt = createdAt;
@@ -47,6 +48,9 @@ public class Comment {
     public void setUserid(String userid) {
         this.userid = userid;
     }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
     public String getContent() {
         return content;

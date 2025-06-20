@@ -40,6 +40,11 @@ public class PostController {
         return postService.getPostsByUser(userid);
     }
 
+    @GetMapping("/email/{email}")
+    public List<Post> getPostsByEmail(@PathVariable String email) {
+        return postService.getPostsByEmail(email);
+    }
+
     @GetMapping("/count/{userid}")
     public long getPostCountByUser(@PathVariable String userid) {
         return postService.getPostCountByUser(userid);

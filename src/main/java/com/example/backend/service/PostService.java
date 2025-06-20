@@ -50,6 +50,9 @@ public class PostService {
         return postRepository.findByUseridOrderByCreatedAtDesc(userid);
     }
 
+    public List<Post> getPostsByEmail(String email) {
+        return postRepository.findByEmailOrderByCreatedAtDesc(email);
+    }
     public long getPostCountByUser(String userid) {
         return postRepository.countByUserid(userid);
     }

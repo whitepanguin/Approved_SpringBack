@@ -42,6 +42,14 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    public List<CommentResponseDto> getCommentsByEmail(String email) {
+        return commentRepo
+                .findByUseridOrderByCreatedAtDesc(email)  // 필드는 userid지만 값은 email
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
     /* ───────────────── 댓글 저장 ───────────────── */
 
     /** 댓글 작성 & 저장 후 DTO 반환 */
@@ -49,10 +57,11 @@ public class CommentService {
 
         Post post = postRepo.findById(dto.getPostId())
                 .orElseThrow();             // 게시글 존재 확인
-
+        System.out.println(post);
         Comment comment = new Comment();
         comment.setPostId(post);
         comment.setUserid(dto.getUserid());
+        comment.setEmail(dto.getEmail());
         comment.setContent(dto.getContent());
 
         Comment saved = commentRepo.save(comment);

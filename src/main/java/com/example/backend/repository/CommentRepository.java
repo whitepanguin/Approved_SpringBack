@@ -8,4 +8,5 @@ import java.util.List;
 public interface CommentRepository extends MongoRepository<Comment, String> {
     List<Comment> findByPostId_IdOrderByCreatedAtAsc(String postId);
     List<Comment> findByUseridOrderByCreatedAtDesc(String userid);
+    List<Comment> findByEmailOrderByCreatedAtDesc(String email);
 }
