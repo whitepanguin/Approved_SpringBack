@@ -2,6 +2,8 @@ package com.example.backend.service;
 
 import com.example.backend.model.Result;
 import com.example.backend.repository.ResultRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -10,26 +12,42 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class ResultService {
 
     private final ResultRepository resultRepo;
-    private final RestTemplate restTemplate;
-
-    public ResultService(ResultRepository resultRepo) {
-        this.resultRepo = resultRepo;
-        this.restTemplate = new RestTemplate(); // 외부 API 요청용
-    }
+    private final RestTemplate restTemplate = new RestTemplate(); // 외부 API 요청용
 
     public Result searchAndSave(String email, String question) {
         // 1. LLM 요청
-        String llmUrl = "http://localhost:9000/llm"; // 외부 LLM 서버 주소
-        Map<String, String> request = Map.of("question", question);
+        String llmUrl = "https://port-0-rag-legal-mc3ho385f405b6d9.sel5.cloudtype.app/rag";
         String llmResponse = "";
 
         try {
-            llmResponse = restTemplate.postForObject(llmUrl, request, String.class);
+            // 요청 Body
+            Map<String, String> requestBody = Map.of("query", question);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(requestBody, headers);
+
+            // 응답 처리
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    llmUrl,
+                    HttpMethod.POST,
+                    requestEntity,
+                    Map.class
+            );
+
+            Map<?, ?> responseBody = response.getBody();
+            if (responseBody != null && responseBody.containsKey("response")) {
+                llmResponse = responseBody.get("response").toString();
+            } else {
+                llmResponse = "⚠️ LLM 응답 파싱 실패";
+            }
+
         } catch (Exception e) {
-            llmResponse = "⚠️ LLM 응답 오류: " + e.getMessage();
+            llmResponse = "⚠️ LLM 요청 오류: " + e.getMessage();
         }
 
         // 2. 현재 시간
