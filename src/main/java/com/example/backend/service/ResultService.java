@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -21,7 +22,7 @@ public class ResultService {
     public Result searchAndSave(String email, String question) {
         // 1. LLM 요청
         String llmUrl = "https://port-0-rag-legal-mc3ho385f405b6d9.sel5.cloudtype.app/rag";
-        String llmResponse = "";
+        String llmResponse = " ";
 
         try {
             // 요청 Body
@@ -65,5 +66,8 @@ public class ResultService {
                 .build();
 
         return resultRepo.save(result);
+    }
+    public List<Result> getResultsByEmail(String email) {
+        return resultRepo.findByEmail(email);
     }
 }
