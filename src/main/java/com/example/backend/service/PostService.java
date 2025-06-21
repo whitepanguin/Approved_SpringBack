@@ -71,15 +71,17 @@ public class PostService {
 
     public Optional<Post> updatePost(String id, Post newPost) {
         return postRepository.findById(id).map(post -> {
-            post.setTitle(newPost.getTitle());
-            post.setContent(newPost.getContent());
-            post.setCategory(newPost.getCategory());
-            post.setTags(newPost.getTags());
-            post.setViews(newPost.getViews());
-            post.setLikes(newPost.getLikes());
-            post.setReports(newPost.getReports());
-            post.setPreview(newPost.getPreview());
-            post.setUpdatedAt(newPost.getUpdatedAt());
+            if (newPost.getTitle() != null) post.setTitle(newPost.getTitle());
+            if (newPost.getContent() != null) post.setContent(newPost.getContent());
+            if (newPost.getCategory() != null) post.setCategory(newPost.getCategory());
+            if (newPost.getTags() != null) post.setTags(newPost.getTags());
+            if (newPost.getViews() != 0) post.setViews(newPost.getViews());
+            if (newPost.getLikes() != 0) post.setLikes(newPost.getLikes());
+            if (newPost.getReports() != 0) post.setReports(newPost.getReports());
+            if (newPost.getPreview() != null) post.setPreview(newPost.getPreview());
+            if (newPost.getUpdatedAt() != null) post.setUpdatedAt(newPost.getUpdatedAt());
+            if (newPost.getStatus() != null) post.setStatus(newPost.getStatus());
+
             return postRepository.save(post);
         });
     }

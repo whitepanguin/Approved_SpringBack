@@ -19,6 +19,7 @@ public class Post {
     private String category;
     private List<String> tags;
     private String email; // 작성자 이메일
+    private String status = "답변대기";
 
 
     private int views = 0;
@@ -40,7 +41,7 @@ public class Post {
 
     public Post() {}
 
-    public Post(String id, String userid, String title, String content, String category, List<String> tags, String email, int views, int comments, int likes, String preview, boolean isHot, boolean isNotice, String createdAt, String updatedAt, int reports, boolean isReported) {
+    public Post(String id, String userid, String title, String content, String category, List<String> tags, String email, String status, int views, int comments, int likes, String preview, boolean isHot, boolean isNotice, String createdAt, String updatedAt, int reports, boolean isReported) {
         this.id = id;
         this.userid = userid;
         this.title = title;
@@ -48,6 +49,7 @@ public class Post {
         this.category = category;
         this.tags = tags;
         this.email = email;
+        this.status = status;
         this.views = views;
         this.comments = comments;
         this.likes = likes;
@@ -60,6 +62,13 @@ public class Post {
         this.isReported = isReported;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getEmail() {
         return email;
