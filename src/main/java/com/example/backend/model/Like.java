@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "likes")
-@CompoundIndex(def = "{'postId': 1, 'userid': 1}", unique = true)
+@CompoundIndex(def = "{'postId': 1, 'email': 1}", unique = true)
 public class Like {
 
     @Id
@@ -16,18 +16,22 @@ public class Like {
     private Post postId;
 
     private String userid;
+    private String email;
 
     public Like() {}
 
-    public Like(Post postId, String userid) {
+    public Like(Post postId, String userid, String email) {
         this.postId = postId;
         this.userid = userid;
+        this.email  = email;
     }
 
-    public Like(String id, Post postId, String userid) {
+    public Like(String id, Post postId, String userid,String email) {
         this.id = id;
         this.postId = postId;
         this.userid = userid;
+        this.email  = email;
+
     }
 
     public String getId() {
@@ -53,4 +57,7 @@ public class Like {
     public void setUserid(String userid) {
         this.userid = userid;
     }
+
+    public String getEmail() {return email;}
+    public void setEmail(String email) {this.email = email;}
 }

@@ -17,8 +17,8 @@ public class LikeController {
     }
 
     @PatchMapping("/{postId}")
-    public String toggleLike(@PathVariable String postId, @RequestParam String userid) {
-        return likeService.toggleLike(postId, userid);
+    public String toggleLike(@PathVariable String postId, @RequestParam String userid, @RequestParam String email) {
+        return likeService.toggleLike(postId, userid,email);
     }
 
     @GetMapping("/user/{userid}")
@@ -29,5 +29,9 @@ public class LikeController {
     @GetMapping("/user/{userid}/posts")
     public List<Post> getLikedPostsByUser(@PathVariable String userid) {
         return likeService.getLikedPostsByUser(userid);
+    }
+    @GetMapping("/email/{email}/posts")
+    public List<Post> getLikedPostsByEmail(@PathVariable String email) {
+        return likeService.getLikedPostsByEmail(email);
     }
 }

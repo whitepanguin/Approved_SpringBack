@@ -43,8 +43,8 @@ public class CommentService {
     }
 
     public List<CommentResponseDto> getCommentsByEmail(String email) {
-        return commentRepo
-                .findByUseridOrderByCreatedAtDesc(email)  // 필드는 userid지만 값은 email
+        return commentRepo                     // ✅ 메서드만 바꾼다
+                .findByEmailOrderByCreatedAtDesc(email)
                 .stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());

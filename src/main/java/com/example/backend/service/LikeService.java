@@ -21,7 +21,7 @@ public class LikeService {
         this.postRepo = postRepo;
     }
 
-    /** 좋아요한 게시글 목록 가져오기 */
+    /** 좋아요한 게시글 목록 -userid 기준 */
     public List<Post> getLikedPostsByUser(String userid) {
         List<Like> likes = likeRepo.findByUserid(userid);
 
@@ -34,19 +34,33 @@ public class LikeService {
                 .toList();
     }
 
-    /** 좋아요 토글 (기존 로직 유지) */
-    public String toggleLike(String postId, String userid) {
+    /** 좋아요한 게시글 목록 - email 기준 */
+    public List<Post> getLikedPostsByEmail(String email) {
+        List<Like> likes = likeRepo.findByEmail(email);
+        return likes.stream()
+                .map(Like::getPostId)
+                .filter(Objects::nonNull)
+                .map(Post::getId)
+                .map(id -> postRepo.findById(id).orElse(null))
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    /** 좋아요 토글 userid, email 혼용(email우선) */
+    public String toggleLike(String postId, String userid, String email) {
         Post post = postRepo.findById(postId).orElseThrow();
 
-        return likeRepo.findByPostIdAndUserid(post, userid)
-                .map(existing -> {
+        // 먼저 email로 찾고, 없으면 userid로 한 번 더 찾는다
+        return likeRepo.findByPostIdAndEmail(post, email)
+                .or(() -> likeRepo.findByPostIdAndUserid(post, userid))
+                .map(existing -> {          // 이미 있으니 해제
                     likeRepo.delete(existing);
                     post.setLikes(post.getLikes() - 1);
                     postRepo.save(post);
                     return "unliked";
                 })
-                .orElseGet(() -> {
-                    Like like = new Like(post, userid);
+                .orElseGet(() -> {          // 둘 다 없으면 새로 저장
+                    Like like = new Like(post, userid, email);
                     likeRepo.save(like);
                     post.setLikes(post.getLikes() + 1);
                     postRepo.save(post);
