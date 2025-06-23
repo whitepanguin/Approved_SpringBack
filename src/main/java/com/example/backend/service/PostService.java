@@ -111,11 +111,16 @@ public class PostService {
 
         Map<String, Long> counts = new HashMap<>();
         for (Map doc : results) {
-            counts.put((String) doc.get("_id"), ((Number) doc.get("count")).longValue());
+            String category = (String) doc.get("_id");
+            if (category == null || category.trim().isEmpty()) {
+                category = "기타"; // 또는 "uncategorized", "없음" 등으로 설정
+            }
+            counts.put(category, ((Number) doc.get("count")).longValue());
         }
 
         return counts;
     }
+
 
     public List<Post> getSortedPosts(String category, String sort) {
         if (category != null && !category.isEmpty()) {
