@@ -70,4 +70,7 @@ public class ResultService {
     public List<Result> getResultsByEmail(String email) {
         return resultRepo.findByEmail(email);
     }
+    public long getcount() {
+        return resultRepo.count();
+    }
 }
