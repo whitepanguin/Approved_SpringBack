@@ -18,6 +18,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Component
@@ -31,6 +32,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+
+
+        Set<String> openEndpoints = Set.of("/category-counts", "/public", "/health");
+
+        if (openEndpoints.contains(path)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
 
         System.out.println(">> JwtAuthenticationFilter: 시작");
         String authHeader = request.getHeader("Authorization");

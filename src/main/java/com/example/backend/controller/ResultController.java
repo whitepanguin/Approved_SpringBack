@@ -29,6 +29,7 @@ public class ResultController {
     public List<Result> getResultsByEmail(@RequestParam String email) {
         return resultService.getResultsByEmail(email);
     }
+
     @GetMapping("/count")
     public ResponseEntity<?> getCount() {
         try {
