@@ -4,8 +4,11 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(collection = "users")
 public class User {
@@ -16,11 +19,16 @@ public class User {
     private String password;
     private String name;
     private String userid;
-    private Long birthDate;
+    private String birthDate;
+    private String phone;
+    private String businessType;
     private String address;
     private String profile;
     private String provider;
+
+    @Field("createdAt")
     private String createdAt;
+    @Field("updatedAt")
     private String updatedAt;
 
     // 기본 생성자
@@ -51,8 +59,14 @@ public class User {
     public String getUserid() { return userid; }
     public void setUserid(String userid) { this.userid = userid; }
 
-    public Long getBirthDate() { return birthDate; }
-    public void setBirthDate(Long birthDate) { this.birthDate = birthDate; }
+    public String getBirthDate() { return birthDate; }
+    public void setBirthDate(String birthDate) { this.birthDate = birthDate; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getBusinessType() { return businessType; }
+    public void setBusinessType(String businessType) { this.businessType = businessType; }
 
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
@@ -68,4 +82,9 @@ public class User {
 
     public String getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
+
+    private List<String> likedPosts = new ArrayList<>();
+    public List<String> getLikedPosts() { return likedPosts; }
+    public void setLikedPosts(List<String> likedPosts) { this.likedPosts = likedPosts; }
+
 }

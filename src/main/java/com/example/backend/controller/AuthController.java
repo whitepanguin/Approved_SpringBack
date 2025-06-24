@@ -1,16 +1,21 @@
 package com.example.backend.controller;
 
+import com.example.backend.security.CustomUserDetails;
 import com.example.backend.service.AuthService;
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.backend.util.JWTUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     @Autowired
@@ -18,20 +23,31 @@ public class AuthController {
 
 
     @PostMapping("/jwt")
-    public Map<String, Object> validateJwt(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return Map.of("success", false, "message", "토큰이 없습니다.");
+    public ResponseEntity<?> verifyJwtToken(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "인증되지 않은 사용자입니다."));
         }
 
-        try {
-            String token = authHeader.substring(7);
-            Claims claims = JWTUtil.validateToken(token);
-            String userId = claims.getSubject();
+        // Spring Security에 저장된 유저 정보 가져오기
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-            return Map.of("success", true, "userId", userId);
-        } catch (Exception e) {
-            return Map.of("success", false, "message", "유효하지 않은 토큰입니다.");
-        }
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", userDetails.getEmail());
+        userData.put("name", userDetails.getName());
+        userData.put("userid", userDetails.getUserid());
+        userData.put("profile", userDetails.getProfile());
+        userData.put("provider", userDetails.getProvider());
+        userData.put("phone", userDetails.getPhone());
+        userData.put("businessType", userDetails.getBusinessType());
+        userData.put("address", userDetails.getAddress());
+        userData.put("birthDate", userDetails.getBirthDate());
+
+
+        return ResponseEntity.ok(Map.of(
+                "message", "자동 로그인 성공",
+                "user", userData
+        ));
     }
 
 

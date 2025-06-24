@@ -6,37 +6,29 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
-
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 
 @Component
 public class JwtUtil {
 
-
-
     @Value("${app.jwt.expiration}")
     private long expiration;
 
+    private SecretKey signingKey;
 
-
-    // ✅ JWT 생성
-    public String generateToken(Object userInfo) {
-        return Jwts.builder()
-                .setSubject("user-auth")
-                .claim("user", userInfo)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith( SignatureAlgorithm.HS256,"secretkey")
-                .compact();
+    @PostConstruct
+    public void init() {
+        signingKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
-    // ✅ JWT 검증
     public Jws<Claims> validateToken(String token) {
         try {
             return Jwts.parserBuilder()
-                    .setSigningKey("secretkey")
+                    .setSigningKey(signingKey)
                     .build()
                     .parseClaimsJws(token);
         } catch (JwtException e) {
@@ -44,18 +36,25 @@ public class JwtUtil {
         }
     }
 
+    public String generateToken(Object userInfo) {
+        return Jwts.builder()
+                .setSubject("user-auth")
+                .claim("user", userInfo)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(signingKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public String generateTokenWithClaims(Map<String, Object> claims) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith( SignatureAlgorithm.HS256,"secretkey")
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-
-
-    // ✅ user 정보 추출
     public Object extractUser(String token) {
         return validateToken(token).getBody().get("user");
     }

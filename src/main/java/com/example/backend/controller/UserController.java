@@ -2,24 +2,30 @@ package com.example.backend.controller;
 
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
+import com.example.backend.security.CustomUserDetails;
 import com.example.backend.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     @Autowired
@@ -30,27 +36,50 @@ public class UserController {
 
     @GetMapping("/getUserInfo")
     public ResponseEntity<?> getUserInfo() {
-        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get());
+        if (principal instanceof CustomUserDetails user) {
+            return ResponseEntity.ok(user);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("success", false, "message", "사용자를 찾을 수 없습니다."));
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED)
+                    .body(Map.of("success", false, "message", "사용자 인증 실패"));
         }
+    }
+
+
+    @GetMapping("/check-duplicate")
+    public ResponseEntity<?> checkDuplicate(@RequestParam(required = false) String userid) {
+
+        if (userid == null || userid.trim().isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "닉네임이 필요합니다."));
+        }
+
+        boolean exists = userService.isUseridDuplicated(userid);
+
+        return ResponseEntity.ok(Map.of("exists", exists));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
-            User newUser = userService.register(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+            userService.register(user);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of(
+                            "registerSuccess", true,
+                            "message", "축하합니다. 회원가입이 완료되었습니다."
+                    ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("success", false, "message", e.getMessage()));
+                    .body(Map.of(
+                            "registerSuccess", false,
+                            "message", e.getMessage()  // "이미 존재하는 이메일입니다."
+                    ));
         }
     }
+
+
 
     @PutMapping("/modify")
     public ResponseEntity<?> modify(@RequestBody User user) {
@@ -175,27 +204,27 @@ public class UserController {
 
 
 
-    @PostMapping("/picture")
-    public ResponseEntity<?> uploadProfilePicture(@RequestParam("picture") MultipartFile file) {
+    @PostMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadProfilePicture(@RequestParam("picture") MultipartFile file,
+                                                  @RequestParam("email") String email) {
         try {
             String uploadDir = "uploads/profiles";
-            File folder = new File(uploadDir);
-            if (!folder.exists()) folder.mkdirs();
+            Path uploadPath = Path.of(uploadDir);
+            Files.createDirectories(uploadPath);
 
             String filename = System.currentTimeMillis() + "-" + file.getOriginalFilename();
-            File dest = new File(folder, filename);
-            file.transferTo(dest);
+            Path target = uploadPath.resolve(filename);
+            file.transferTo(target);
 
-            return ResponseEntity.ok(Map.of(
-                    "uploadSuccess", true,
-                    "message", "프로필 사진 업로드 성공",
-                    "filePath", "/uploads/profiles/" + filename
-            ));
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                    "uploadSuccess", false,
-                    "message", "파일 업로드 실패"
-            ));
+            User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+            String filePath = "/uploads/profiles/" + filename;
+            user.setProfile(filePath);
+            userRepository.save(user);
+
+            return ResponseEntity.ok(Map.of("uploadSuccess", true, "filePath", filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("uploadSuccess", false, "message", "파일 업로드 실패: " + e.getMessage()));
         }
     }
 
@@ -214,16 +243,9 @@ public class UserController {
                 savedPaths.add("/uploads/certify/" + filename);
             }
 
-            return ResponseEntity.ok(Map.of(
-                    "uploadSuccess", true,
-                    "message", "강사 인증 이미지 업로드 성공",
-                    "filePaths", savedPaths
-            ));
+            return ResponseEntity.ok(Map.of("uploadSuccess", true, "message", "강사 인증 이미지 업로드 성공", "filePaths", savedPaths));
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                    "uploadSuccess", false,
-                    "message", "파일 업로드 실패"
-            ));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("uploadSuccess", false, "message", "파일 업로드 실패"));
         }
     }
 
