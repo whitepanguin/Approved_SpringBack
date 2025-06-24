@@ -2,6 +2,7 @@ package com.example.backend.service;
 
 import com.example.backend.model.Post;
 import com.example.backend.model.User;
+import com.example.backend.repository.CommentRepository;
 import com.example.backend.repository.LikeRepository;
 import com.example.backend.repository.PostRepository;
 import com.example.backend.repository.UserRepository;
@@ -14,15 +15,12 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class PostService {
-
 
     @Autowired
     private LikeRepository likeRepo;
@@ -33,6 +31,8 @@ public class PostService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+    @Autowired
+    private CommentRepository commentRepository;
 
     public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
@@ -53,6 +53,7 @@ public class PostService {
     public List<Post> getPostsByEmail(String email) {
         return postRepository.findByEmailOrderByCreatedAtDesc(email);
     }
+
     public long getPostCountByUser(String userid) {
         return postRepository.countByUserid(userid);
     }
@@ -101,7 +102,6 @@ public class PostService {
         });
     }
 
-
     public Map<String, Long> getCategoryCounts() {
         Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.group("category").count().as("count")
@@ -121,7 +121,6 @@ public class PostService {
         return counts;
     }
 
-
     public List<Post> getSortedPosts(String category, String sort) {
         if (category != null && !category.isEmpty()) {
             if ("comments".equals(sort)) return postRepository.findByCategoryOrderByCommentsDesc(category);
@@ -131,6 +130,7 @@ public class PostService {
             return postRepository.findAllByOrderByCreatedAtDesc();
         }
     }
+
     public long getPostCount() {
         return postRepository.count();
     }
@@ -148,7 +148,23 @@ public class PostService {
     public long getReportedPostCount() {
         return postRepository.countByIsReportedTrue();
     }
+
     public int getLikeCountByPostId(String postId) {
         return likeRepo.countByPostId_Id(postId);
     }
+
+    public long getPostCountByEmail(String email) {
+        return postRepository.countByEmail(email);
+    }
+
+    //  이메일 기준 받은 좋아요 수
+    public long getReceivedLikeCountByEmail(String email) {
+        List<Post> posts = postRepository.findByEmail(email);
+        return posts.stream().mapToLong(Post::getLikes).sum();
+    }
+
+    public long getCommentCountByUser(String email) {
+        return commentRepository.countByEmail(email);
+    }
+
 }

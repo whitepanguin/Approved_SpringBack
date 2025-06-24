@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Document(collection = "likes")
 @CompoundIndex(def = "{'postId': 1, 'email': 1}", unique = true)
 public class Like {
@@ -18,13 +20,17 @@ public class Like {
     private String userid;
     private String email;
 
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+
     public Like() {}
 
     public Like(Post postId, String userid, String email) {
         this.postId = postId;
         this.userid = userid;
-        this.email  = email;
+        this.email = email;
     }
+
 
     public Like(String id, Post postId, String userid,String email) {
         this.id = id;

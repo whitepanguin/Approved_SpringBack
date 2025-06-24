@@ -14,6 +14,7 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+
     public PostController(PostService postService) {
         this.postService = postService;
     }
@@ -35,19 +36,39 @@ public class PostController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/user/{userid}")
-    public List<Post> getPostsByUser(@PathVariable String userid) {
-        return postService.getPostsByUser(userid);
-    }
-
     @GetMapping("/email/{email}")
     public List<Post> getPostsByEmail(@PathVariable String email) {
         return postService.getPostsByEmail(email);
     }
 
-    @GetMapping("/count/{userid}")
-    public long getPostCountByUser(@PathVariable String userid) {
-        return postService.getPostCountByUser(userid);
+    @GetMapping("/count/email/{email}")
+    public long getPostCountByEmail(@PathVariable String email) {
+        return postService.getPostCountByEmail(email);
+    }
+
+    @GetMapping("/like/email/{email}")
+    public long getReceivedLikeCountByEmail(@PathVariable String email) {
+        return postService.getReceivedLikeCountByEmail(email);
+    }
+
+    // 🔽 이메일 기반 통계 API
+    @GetMapping("/stats/email/{email}")
+    public ResponseEntity<?> getUserStatsByEmail(@PathVariable String email) {
+        try {
+            long postCount = postService.getPostCountByEmail(email);
+            long commentCount = postService.getCommentCountByUser(email);
+            long likeCount = postService.getReceivedLikeCountByEmail(email);
+
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "postCount", postCount,
+                    "commentCount", commentCount,
+                    "likeCount", likeCount
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "유저 통계 조회 실패"));
+        }
     }
 
     @PutMapping("/{id}")
@@ -68,7 +89,6 @@ public class PostController {
     public void incrementView(@PathVariable String id) {
         postService.incrementView(id);
     }
-
 
     @GetMapping("/category-counts")
     public Map<String, Long> getCategoryCounts() {
@@ -105,22 +125,12 @@ public class PostController {
                     .body(Map.of("success", false, "message", e.getMessage()));
         }
     }
-    /*
-async function handleReport(postId) {
-  const res = await fetch(`http://localhost:8000/posts/${postId}/report`, {
-    method: "PATCH",
-  });
-  const data = await res.json();
-  alert(data.message);
-}
-*/
-    // 신고된 게시글 리스트 반환
+
     @GetMapping("/reported")
     public ResponseEntity<List<Post>> getReportedPosts() {
         return ResponseEntity.ok(postService.getReportedPosts());
     }
 
-    // 신고된 게시글 개수 반환
     @GetMapping("/reported/count")
     public ResponseEntity<?> getReportedPostCount() {
         try {
@@ -132,10 +142,7 @@ async function handleReport(postId) {
             ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of(
-                            "success", false,
-                            "message", "신고된 글 수 조회 실패"
-                    ));
+                    .body(Map.of("success", false, "message", "신고된 글 수 조회 실패"));
         }
     }
 
@@ -147,5 +154,4 @@ async function handleReport(postId) {
                 "likeCount", count
         ));
     }
-
 }

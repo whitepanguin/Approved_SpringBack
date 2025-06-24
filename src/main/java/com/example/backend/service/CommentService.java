@@ -49,6 +49,10 @@ public class CommentService {
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }
+    /** 이메일 기준 댓글 수 조회 */
+    public long countCommentsByEmail(String email) {
+        return commentRepo.countByEmail(email);
+    }
 
     /* ───────────────── 댓글 저장 ───────────────── */
 
@@ -87,4 +91,6 @@ public class CommentService {
                 p != null ? p.getTitle() : "(삭제된 글)"
         );
     }
+
+
 }

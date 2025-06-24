@@ -5,6 +5,8 @@ import com.example.backend.DTO.CommentResponseDto;
 import com.example.backend.model.Comment;
 import com.example.backend.service.CommentService;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+
 
 import java.util.List;
 
@@ -52,6 +54,14 @@ public class CommentController {
     @GetMapping("/email/{email}")
     public List<CommentResponseDto> getCommentsByEmail(@PathVariable String email) {
         return commentService.getCommentsByEmail(email);
+    }
+    /* ----------------------------------------------------------------
+       ④ 특정 이메일 기준 댓글 수 조회
+       ---------------------------------------------------------------- */
+    @GetMapping("/count/{email}")
+    public Map<String, Long> getCommentCountByEmail(@PathVariable String email) {
+        long count = commentService.countCommentsByEmail(email);
+        return Map.of("count", count);
     }
 
 }
