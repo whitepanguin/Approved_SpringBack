@@ -1,0 +1,15 @@
+package org.example.backend.repository;
+
+import org.example.backend.model.Comment;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+@Repository
+public interface CommentRepository extends MongoRepository<Comment, String> {
+    List<Comment> findByPostId_IdOrderByCreatedAtAsc(String postId);
+    List<Comment> findByUseridOrderByCreatedAtDesc(String userid); // 예전 방식, 나중에 제거 가능
+    List<Comment> findByEmailOrderByCreatedAtDesc(String email);   // ✅ 이메일 기반 댓글 조회
+
+    long countByEmail(String email); //  통계용 (댓글 수)
+}
