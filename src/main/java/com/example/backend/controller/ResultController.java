@@ -44,4 +44,10 @@ public class ResultController {
                     .body(Map.of("success", false, "message", "글 수 조회 실패"));
         }
     }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<List<Result>> getResultsByUserEmail(@PathVariable String email) {
+        List<Result> results = resultService.getResultsByUserEmail(email);
+        return ResponseEntity.ok(results);
+    }
 }

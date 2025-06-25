@@ -71,6 +71,11 @@ public class ResultService {
         return resultRepo.findByEmail(email);
     }
 
+    // 이메일 기준 검색 결과 조회 메서드 (이름 충돌 피함)
+    public List<Result> getResultsByUserEmail(String email) {
+        return resultRepo.findByEmailOrderByCreatedAtDesc(email);
+    }
+
     public long getcount() {
         return resultRepo.count();
     }

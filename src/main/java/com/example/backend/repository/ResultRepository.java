@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ResultRepository extends MongoRepository<Result, String>{
     List<Result> findByEmail(String email);
+
+    List<Result> findByEmailOrderByCreatedAtDesc(String email);
 }
