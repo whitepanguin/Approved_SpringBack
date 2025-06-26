@@ -8,6 +8,7 @@ import com.example.backend.model.Post;
 import com.example.backend.repository.CommentRepository;
 import com.example.backend.repository.PostRepository;
 import org.springframework.stereotype.Service;
+import com.example.backend.repository.CommentRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;                      // ★ stream 변환용
@@ -91,6 +92,18 @@ public class CommentService {
                 p != null ? p.getTitle() : "(삭제된 글)"
         );
     }
+    /* ───────────────── 댓글 삭제 메서드 ───────────────── */
+    public void deleteComment(String id, String email) {
+        Comment comment = commentRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+
+        if (!comment.getEmail().equalsIgnoreCase(email)) {
+            throw new RuntimeException("삭제 권한이 없습니다.");
+        }
+
+        commentRepo.deleteById(id);
+    }
+
 
 
 }
