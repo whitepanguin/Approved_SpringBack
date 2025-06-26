@@ -82,6 +82,7 @@ public class PostService {
             if (newPost.getPreview() != null) post.setPreview(newPost.getPreview());
             if (newPost.getUpdatedAt() != null) post.setUpdatedAt(newPost.getUpdatedAt());
             if (newPost.getStatus() != null) post.setStatus(newPost.getStatus());
+            if (newPost.getReported() != null) post.setReported(newPost.getReported());
 
             return postRepository.save(post);
         });
