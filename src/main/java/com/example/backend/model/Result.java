@@ -3,33 +3,28 @@ package com.example.backend.model;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Data
-@Document(collection = "result")
 @Getter
 @Setter
+@Document(collection = "result")
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Result {
 
     @Id
     private String id;
+    @Field("email")
     private String email;
     private String question;
-    private String result;
+    @Field("result")
+    private ResultContent result;
     private String address;
     private String file = "";
     private String map = "";
     private String createdAt;
 
-    // 생성자, Getter/Setter
-    public Result() {}
 
-    public Result(String email, String question, String result, String address) {
-        this.email = email;
-        this.question = question;
-        this.result = result;
-        this.address = address;
-    }
 
 }

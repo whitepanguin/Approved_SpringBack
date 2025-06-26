@@ -1,6 +1,8 @@
 package com.example.backend.controller;
 
 import com.example.backend.model.Post;
+import com.example.backend.repository.CommentRepository;
+import com.example.backend.repository.UserRepository;
 import com.example.backend.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,14 +11,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/posts")
 public class PostController {
 
     private final PostService postService;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService,
+                          UserRepository userRepository,
+                          CommentRepository commentRepository) {
         this.postService = postService;
+        this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
     }
 
     @GetMapping("")
@@ -51,7 +60,7 @@ public class PostController {
         return postService.getReceivedLikeCountByEmail(email);
     }
 
-    // 🔽 이메일 기반 통계 API
+    // 🔹 사용자별 이메일 기반 통계
     @GetMapping("/stats/email/{email}")
     public ResponseEntity<?> getUserStatsByEmail(@PathVariable String email) {
         try {
@@ -68,6 +77,25 @@ public class PostController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("success", false, "message", "유저 통계 조회 실패"));
+        }
+    }
+
+    // 🔹 전체 커뮤니티 통계 API
+    @GetMapping("/stats/community")
+    public ResponseEntity<?> getCommunityStats() {
+        try {
+            long totalUsers = userRepository.count();
+            long totalPosts = postService.getPostCount();
+            long totalComments = commentRepository.count();
+
+            return ResponseEntity.ok(Map.of(
+                    "totalUsers", totalUsers,
+                    "totalPosts", totalPosts,
+                    "totalComments", totalComments
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "커뮤니티 통계 조회 실패"));
         }
     }
 

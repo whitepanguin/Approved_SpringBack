@@ -41,7 +41,7 @@ public class Post {
 
     public Post() {}
 
-    public Post(String id, String userid, String title, String content, String category, List<String> tags, String email, String status, int views, int comments, int likes, String preview, boolean isHot, boolean isNotice, String createdAt, String updatedAt, int reports, boolean isReported) {
+    public Post(String id, String userid, String title, String content, String category, List<String> tags, String email, String status, int views, int comments, int likes, String preview, boolean isHot, boolean isNotice, String createdAt, String updatedAt, int reports, Boolean isReported) {
         this.id = id;
         this.userid = userid;
         this.title = title;
@@ -195,7 +195,7 @@ public class Post {
         this.reports = reports;
     }
 
-    public boolean isReported() {
+    public Boolean isReported() {
         return isReported;
     }
 
@@ -216,4 +216,7 @@ public class Post {
         }
     }
 
+    public Boolean getReported() {
+        return isReported;
+    }
 }

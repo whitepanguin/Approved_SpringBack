@@ -4,6 +4,7 @@ import com.example.backend.DTO.CommentDTO;
 import com.example.backend.DTO.CommentResponseDto;
 import com.example.backend.model.Comment;
 import com.example.backend.service.CommentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
@@ -63,5 +64,17 @@ public class CommentController {
         long count = commentService.countCommentsByEmail(email);
         return Map.of("count", count);
     }
-
+    /* ----------------------------------------------------------------
+       5 특정 이메일 기준 댓글 수 조회
+       ---------------------------------------------------------------- */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteComment(@PathVariable String id, @RequestParam String email) {
+        try {
+            commentService.deleteComment(id, email);
+            return ResponseEntity.ok("댓글 삭제 완료");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body("❌ 삭제 실패: " + e.getMessage());
+        }
+    }
 }
+

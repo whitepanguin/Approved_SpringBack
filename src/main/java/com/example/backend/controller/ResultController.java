@@ -21,8 +21,8 @@ public class ResultController {
     }
 
     @GetMapping
-    public Result handleSearchLlm(@RequestParam String search,
-                                  @RequestParam String email) {
+    public Result handleSearchLlm(@RequestParam("search") String search,
+                                  @RequestParam("email") String email) {
         return resultService.searchAndSave(email, search);
     }
     @GetMapping("/results")
@@ -44,4 +44,11 @@ public class ResultController {
                     .body(Map.of("success", false, "message", "글 수 조회 실패"));
         }
     }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<List<Result>> getResultsByUserEmail(@PathVariable String email) {
+        List<Result> results = resultService.getResultsByUserEmail(email);
+        return ResponseEntity.ok(results);
+    }
+
 }
