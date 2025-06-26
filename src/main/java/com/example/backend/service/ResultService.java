@@ -77,8 +77,17 @@ public class ResultService {
 
     // 이메일 기준 검색 결과 조회 메서드 (이름 충돌 피함)
     public List<Result> getResultsByUserEmail(String email) {
-        return resultRepo.findByEmailOrderByCreatedAtDesc(email);
+        try {
+            List<Result> results = resultRepo.findByEmail(email);
+            System.out.println("✅ 조회 결과 개수: " + results.size());
+            return results;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;  // 필요하면 그대로 예외 던지기
+        }
     }
+
+
 
     public long getcount() {
         return resultRepo.count();

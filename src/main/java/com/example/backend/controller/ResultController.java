@@ -50,4 +50,5 @@ public class ResultController {
         List<Result> results = resultService.getResultsByUserEmail(email);
         return ResponseEntity.ok(results);
     }
+
 }
