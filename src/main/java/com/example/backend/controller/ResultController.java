@@ -21,8 +21,8 @@ public class ResultController {
     }
 
     @GetMapping
-    public Result handleSearchLlm(@RequestParam String search,
-                                  @RequestParam String email) {
+    public Result handleSearchLlm(@RequestParam("search") String search,
+                                  @RequestParam("email") String email) {
         return resultService.searchAndSave(email, search);
     }
     @GetMapping("/results")

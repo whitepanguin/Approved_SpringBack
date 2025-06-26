@@ -6,9 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "result")
-@Getter
-@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Result {
 
@@ -16,20 +15,12 @@ public class Result {
     private String id;
     private String email;
     private String question;
-    private String result;
+    private ResultContent result;
     private String address;
     private String file = "";
     private String map = "";
     private String createdAt;
 
-    // 생성자, Getter/Setter
-    public Result() {}
 
-    public Result(String email, String question, String result, String address) {
-        this.email = email;
-        this.question = question;
-        this.result = result;
-        this.address = address;
-    }
 
 }
