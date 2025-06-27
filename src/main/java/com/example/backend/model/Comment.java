@@ -1,6 +1,8 @@
 package com.example.backend.model;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,10 +17,11 @@ public class Comment {
     private String userid;
     private String content;
 
-    @DBRef
-    private Post postId;
 
+    private Post postId;
+    @CreatedDate
     private LocalDateTime createdAt = LocalDateTime.now();
+    @LastModifiedDate
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     public Comment() {}

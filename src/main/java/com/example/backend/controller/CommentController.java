@@ -26,6 +26,7 @@ public class CommentController {
        ---------------------------------------------------------------- */
     @GetMapping("/{postId}")
     public List<CommentResponseDto> getCommentsByPost(@PathVariable String postId) {   // 🔹 반환 타입 변경
+        System.out.println(postId);
         return commentService.getCommentsByPost(postId);
     }
 
