@@ -25,5 +25,4 @@ public interface PostRepository extends MongoRepository<Post, String> {
     long countByEmail(String email);
 
     List<Post> findByEmail(String email);
-
 }
