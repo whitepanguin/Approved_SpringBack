@@ -16,7 +16,7 @@ public class DictionaryController {
     }
 
     @GetMapping
-    public String getDefinition(@RequestParam String q) {
+    public String getDefinition(@RequestParam("q") String q) {
         return dictionaryService.searchWord(q);
     }
 }

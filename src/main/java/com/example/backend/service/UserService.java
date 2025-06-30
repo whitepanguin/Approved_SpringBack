@@ -22,6 +22,9 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
+        if (userRepository.findByUserid(user.getUserid()).isPresent()) {
+            throw new RuntimeException("이미 존재하는 유져입니다.");
+        }
 
         // 비밀번호 암호화
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());

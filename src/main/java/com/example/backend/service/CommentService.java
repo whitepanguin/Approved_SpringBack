@@ -28,12 +28,29 @@ public class CommentService {
     /* ───────────────── 댓글 조회 ───────────────── */
 
     /** 게시글별 댓글 목록 */
+//    public List<CommentResponseDto> getCommentsByPost(String postId) {
+//        return commentRepo.findByPostId_IdOrderByCreatedAtAsc(postId)
+//                .stream()
+//                .map(this::toDto)             // ★ 모델 → DTO
+//                .collect(Collectors.toList());
+//    }
     public List<CommentResponseDto> getCommentsByPost(String postId) {
-        return commentRepo.findByPostId_IdOrderByCreatedAtAsc(postId)
-                .stream()
-                .map(this::toDto)             // ★ 모델 → DTO
+        List<Comment> comments = commentRepo.findByPostId_IdOrderByCreatedAtAsc(postId);
+
+//        System.out.println("📥 가져온 댓글 수: " + comments.size());
+//        for (Comment c : comments) {
+//            System.out.println("📝 댓글 내용: " + c.getContent() + " / 작성일: " + c.getCreatedAt());
+//        }
+
+        return comments.stream()
+                .map(comment -> {
+                    CommentResponseDto dto = toDto(comment);
+//                    System.out.println("➡️ DTO 변환: " + dto); // toString() 구현되어 있으면 내용 출력됨
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
+
 
     /** 유저별 댓글 목록 */
     public List<CommentResponseDto> getCommentsByUser(String userid) {
