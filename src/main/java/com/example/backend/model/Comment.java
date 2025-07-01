@@ -3,7 +3,6 @@ package com.example.backend.model;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -17,8 +16,7 @@ public class Comment {
     private String userid;
     private String content;
 
-
-    private Post postId;
+    private String postId; // ✅ String 타입으로 유지
     @CreatedDate
     private LocalDateTime createdAt = LocalDateTime.now();
     @LastModifiedDate
@@ -26,7 +24,8 @@ public class Comment {
 
     public Comment() {}
 
-    public Comment(String id, String userid, String content, Post postId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    // ✅ 생성자 postId 타입 수정 (Post → String)
+    public Comment(String id, String userid, String email, String content, String postId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userid = userid;
         this.email = email;
@@ -52,8 +51,13 @@ public class Comment {
         this.userid = userid;
     }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getContent() {
         return content;
@@ -63,11 +67,12 @@ public class Comment {
         this.content = content;
     }
 
-    public Post getPostId() {
+    // ✅ getter/setter postId 타입 수정 (Post → String)
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId(Post postId) {
+    public void setPostId(String postId) {
         this.postId = postId;
     }
 
