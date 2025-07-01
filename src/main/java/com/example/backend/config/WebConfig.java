@@ -9,7 +9,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://port-next-approved-front-m5mcnm8ebdc80276.sel4.cloudtype.app") // React 프론트 주소
+                .allowedOrigins("https://port-next-approved-front-m5mcnm8ebdc80276.sel4.cloudtype.app", "http://localhost:3000") // React 프론트 주소
                 .allowedMethods("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
