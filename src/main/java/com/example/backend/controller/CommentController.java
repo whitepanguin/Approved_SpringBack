@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/comments")
+@CrossOrigin(origins = "https://port-next-approved-front-m5mcnm8ebdc80276.sel4.cloudtype.app")
 public class CommentController {
 
     private final CommentService commentService;

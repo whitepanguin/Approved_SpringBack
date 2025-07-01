@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/searchllm")
+@CrossOrigin(origins = "https://port-next-approved-front-m5mcnm8ebdc80276.sel4.cloudtype.app")
 public class ResultController {
 
     private final ResultService resultService;
