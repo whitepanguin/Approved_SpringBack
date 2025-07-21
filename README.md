@@ -54,7 +54,7 @@ cd Approved_SpringBack
 .\mvnw spring-boot:run
 ```
 ### 브라우저 접속
-`http://localhost:8080`
+`http://localhost:8000`
 ## 💡 트러블슈팅 & 해결 방법
 * DB 연결 오류 → application.properties 설정 확인
 * 파일 업로드 문제 → uploads 폴더 권한 및 경로 확인
